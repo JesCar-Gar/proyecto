@@ -1,0 +1,7 @@
+CREATE TABLE peticiones (
+ id SERIAL PRIMARY KEY,
+ oyente VARCHAR(100) NOT NULL,
+ cancion_artista VARCHAR(150) NOT NULL,
+ fecha_peticion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ reproducida BOOLEAN DEFAULT FALSE
+);
