@@ -1,4 +1,3 @@
-dockerfile
 FROM php:7.4-apache
 
 RUN apt-get update && apt-get install -y \
@@ -19,8 +18,13 @@ RUN echo "ScriptAlias /cgi-bin/ /var/www/html/cgi-bin/" >> /etc/apache2/apache2.
 
 RUN mkdir -p /var/www/html/cgi-bin
 
-
 COPY config.php /var/www/html/
 
+COPY tu_script.py /var/www/html/cgi-bin/Reporte.py
 
-COPY Reporte.py /var/www/html/cgi-bin/peticion.py
+RUN chmod +x /var/www/html/cgi-bin/reporte.py
+RUN chown -R www-data:www-data /var/www/html/cgi-bin
+
+RUN echo "Options +ExecCGI" > /var/www/html/cgi-bin/.htaccess
+
+EXPOSE 80
