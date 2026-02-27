@@ -37,10 +37,10 @@
 
 
 <?php
-$host = 'empanadas'; 
+$host = 'localhost'; 
 $dbname = 'radio_db';
-$username = 'EmpanadasADescuento';
-$password = 'EmpanadasADescuento';
+$username = '';
+$password = '';
 
 try {
     $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $username, $password);

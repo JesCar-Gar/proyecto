@@ -13,7 +13,7 @@ if not oyente or not cancion:
 else:
     try:
         conn = pymysql.connect(
-            host='empanada',
+            host='localhost',
             database='radio_db',
             user='EmpanadasDescuento',
             password='EmpanadasDescuento'
