@@ -30,6 +30,7 @@ else:
         
         print('<meta http-equiv="refresh" content="3;url=/">')
         print(f'<h3>✓ ¡Gracias {oyente}! Tu petición fue guardada</h3>')
+        print(f'<p>Artista: {artista}</p>')
         print(f'<p>Canción: {cancion}</p>')
     except Exception as e:
         print('<h3>✗ Error al guardar</h3>')
