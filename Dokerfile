@@ -1,30 +1,27 @@
-FROM php:7.4-apache
+FROM php:8.2-apache
+
+RUN docker-php-ext-install pdo pdo_mysql mysqli
+
+RUN a2enmod cgi rewrite
 
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
-    python3-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install mysqli pdo_mysql
-
 RUN pip3 install pymysql
 
-RUN a2enmod cgi
+RUN ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/
 
-RUN echo "AddHandler cgi-script .py" >> /etc/apache2/apache2.conf
-RUN echo "ScriptAlias /cgi-bin/ /var/www/html/cgi-bin/" >> /etc/apache2/apache2.conf
+RUN mkdir -p /usr/lib/cgi-bin
+RUN chmod 755 /usr/lib/cgi-bin
 
-RUN mkdir -p /var/www/html/cgi-bin
+COPY html/ /var/www/html/
+COPY cgi-bin/ /usr/lib/cgi-bin/
 
-COPY config.php /var/www/html/
-
-COPY tu_script.py /var/www/html/cgi-bin/Reporte.py
-
-RUN chmod +x /var/www/html/cgi-bin/reporte.py
-RUN chown -R www-data:www-data /var/www/html/cgi-bin
-
-RUN echo "Options +ExecCGI" > /var/www/html/cgi-bin/.htaccess
+RUN chmod +x /usr/lib/cgi-bin/*.py
 
 EXPOSE 80
+
+CMD ["apache2-foreground"]

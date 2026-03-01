@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "80:80"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./html:/var/www/html
+      - ./cgi-bin:/usr/lib/cgi-bin
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword123
+      MYSQL_DATABASE: radio_db
+      MYSQL_USER: empanadasDescuento
+      MYSQL_PASSWORD: empanadasDescuento
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./DB:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+volumes:
+  mysql_data:
