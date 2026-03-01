@@ -20,6 +20,7 @@ COPY html/ /var/www/html/
 COPY cgi-bin/ /usr/lib/cgi-bin/
 
 RUN chmod +x /usr/lib/cgi-bin/*.py
+RUN chown -R www-data:www-data /var/www/html/
 
 EXPOSE 80
 
