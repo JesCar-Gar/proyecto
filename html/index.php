@@ -4,13 +4,17 @@ $dbname = 'radio_db';
 $username = 'empanadasDescuento';
 $password = 'empanadasDescuento';
 $creadores = [];
+$peticiones = [];
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     $stmt = $pdo->query("SELECT * FROM creadores ORDER BY id");
     $creadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $stmt2 = $pdo->query("SELECT * FROM peticiones ORDER BY fecha_peticion DESC");
+    $peticiones = $stmt2->fetchAll(PDO::FETCH_ASSOC);
     
 } catch (PDOException $e) {
     $error = $e->getMessage();
@@ -44,6 +48,7 @@ try {
     </form>
 
     <button onclick="toggleCreadores()">Ver Creadores del Proyecto</button>
+    <button onclick="togglePeticiones()">Ver Peticiones</button>
 
     <div id="creadoresSection" style="display:none;">
         <h3>Creadores del Proyecto:</h3>
@@ -64,14 +69,37 @@ try {
         <?php endif; ?>
     </div>
 
+    <div id="peticionesSection" style="display:none;">
+        <h3>Peticiones:</h3>
+        <?php if (!empty($peticiones)): ?>
+            <?php foreach ($peticiones as $p): ?>
+                <hr>
+                <p><strong>ID:</strong> <?php echo $p['id']; ?></p>
+                <p><strong>Oyente:</strong> <?php echo htmlspecialchars($p['oyente']); ?></p>
+                <p><strong>Artista:</strong> <?php echo htmlspecialchars($p['artista']); ?></p>
+                <p><strong>Canción:</strong> <?php echo htmlspecialchars($p['cancion_artista']); ?></p>
+                <p><strong>Fecha:</strong> <?php echo $p['fecha_peticion']; ?></p>
+                <p><strong>Reproducida:</strong> <?php echo $p['reproducida'] ? 'Sí' : 'No'; ?></p>
+                <form action="/cgi-bin/borrar.py" method="POST" style="display:inline;">
+                    <input type="hidden" name="id" value="<?php echo $p['id']; ?>">
+                    <button type="submit" onclick="return confirm('¿Seguro que quieres borrar esta petición?')">Borrar</button>
+                </form>
+                <hr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No hay peticiones registradas</p>
+        <?php endif; ?>
+    </div>
+
     <script>
     function toggleCreadores() {
         var x = document.getElementById('creadoresSection');
-        if(x.style.display === 'none') {
-            x.style.display = 'block';
-        } else {
-            x.style.display = 'none';
-        }
+        x.style.display = x.style.display === 'none' ? 'block' : 'none';
+    }
+    
+    function togglePeticiones() {
+        var x = document.getElementById('peticionesSection');
+        x.style.display = x.style.display === 'none' ? 'block' : 'none';
     }
     </script>
 </body>
