@@ -19,7 +19,8 @@ RUN chmod 755 /usr/lib/cgi-bin
 COPY html/ /var/www/html/
 COPY cgi-bin/ /usr/lib/cgi-bin/
 
-RUN chmod +x /usr/lib/cgi-bin/*.py
+RUN chmod -R 755 /var/www/html/
+RUN chmod -R 755 /usr/lib/cgi-bin/
 RUN chown -R www-data:www-data /var/www/html/
 
 EXPOSE 80
