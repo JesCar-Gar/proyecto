@@ -1,12 +1,25 @@
-import pymysql, cgi, cgitb
+#!/usr/bin/env python3
+import pymysql
+import os
+import sys
+from urllib.parse import unquote_plus
 
-cgitb.enable()
 print("Content-Type: text/html\n")
 
-form = cgi.FieldStorage()
-oyente = form.getvalue("oyente")
-artista = form.getvalue("artista")
-cancion = form.getvalue("cancion")
+form = {}
+if 'REQUEST_METHOD' in os.environ and os.environ['REQUEST_METHOD'] == 'POST':
+    content_length = int(os.environ.get('CONTENT_LENGTH', 0))
+    if content_length > 0:
+        post_data = sys.stdin.read(content_length)
+        pairs = post_data.split('&')
+        for pair in pairs:
+            if '=' in pair:
+                key, value = pair.split('=')
+                form[key] = unquote_plus(value)
+
+oyente = form.get('oyente', '')
+artista = form.get('artista', '')
+cancion = form.get('cancion', '')
 
 if not oyente or not cancion:
     print('<meta http-equiv="refresh" content="2;url=/index.php">')
